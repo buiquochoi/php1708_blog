@@ -60,6 +60,7 @@ class PostController extends Controller
         }
         // dd($request);
         $post->save();
+        $post->tags()->sync($request->tags, false);
         session()->flash('notif','Thêm thành công');
         return redirect()->route('posts.index');
     }
@@ -84,10 +85,11 @@ class PostController extends Controller
     public function edit($id)
     {
         //
+        $tags = Tag::all();
         $categories = Category::all();
         $post= Post::find($id);
         // dd($post);
-        return view('admin.posts.edit', compact(['post','categories']));
+        return view('admin.posts.edit', compact(['post','categories','tags']));
     }
 
     /**
@@ -114,6 +116,7 @@ class PostController extends Controller
         }
         // dd($request);
         $post->save();
+        $post->tags()->sync($request->tags);
         session()->flash('notif','Sửa thành công');
         return redirect()->back();
     }

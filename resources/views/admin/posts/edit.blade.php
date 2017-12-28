@@ -1,5 +1,7 @@
 @extends('layouts.admin')
-
+@section('css')
+	<link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
+@endsection
 @section('content')
 <h2>Thêm mới bài viết</h2>
 <div class="col-md-8 col-md-offset-2">
@@ -22,6 +24,7 @@
 			@endif  
 		</div>
 		<div class="form-group">
+			<img src="{!!asset($post->featured)!!}" width="300px" alt="">
 			<label for="">Ảnh đại diện</label>
 			<input type="file" name="featured" class="form-control">
 			@if ($errors->has('featured'))
@@ -50,12 +53,29 @@
 				@endforeach
 			</select>	
 		</div>
-		<button class="btn btn-success" type="submit">Thêm mới</button>
+		<div class="form-group">
+			<label for="">Thẻ tags</label>
+			<select name="tags[]" class="tags-select form-control" multiple>
+				@foreach ($tags as $tag)
+				{{-- expr --}}
+				<option value="{{$tag->id}}">{{$tag->name}}</option>
+				@endforeach
+			</select>	
+		</div>
+		<button class="btn btn-success" type="submit">Edit</button>
 	</form>	
 </div>
 @endsection
 
 @section('js')
+<script src="{{ asset('js/select2.min.js') }}">
+</script>
+<script>
+	$(document).ready(function() {
+		$('.tags-select').select2();
+		$('.tags-select').select2().val({{ json_encode($post->tags()->pluck('id'))}}).trigger('change');
+	});
+</script>
 <script >
 	$(document).ready(function() {
 		$('#formPost').validate({
